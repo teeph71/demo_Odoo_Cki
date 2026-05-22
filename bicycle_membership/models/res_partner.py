@@ -48,7 +48,7 @@ class ResPartner(models.Model):
         
         cleaned_name = ' '.join(name.split())
 
-        if not re.match(r'^[A-Za-zÀ-ỹ\s]+$', cleaned_name):
+        if not re.match(r'^[A-Za-zÀ-ỹ\s()]+$', cleaned_name):
             raise ValidationError(
                 'Tên khách hàng không được chứa số hoặc ký tự đặc biệt!'
             )
