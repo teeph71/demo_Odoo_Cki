@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_assembly_template_form" model="ir.ui.view">
+        <field name="name">bike.assembly.template.form</field>
+        <field name="model">bike.assembly.template</field>
+        <field name="arch" type="xml">
+            <form string="Assembly Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Road Bike Checklist"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="category_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Checklist Items">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_assembly_template_tree" model="ir.ui.view">
+        <field name="name">bike.assembly.template.tree</field>
+        <field name="model">bike.assembly.template</field>
+        <field name="arch" type="xml">
+            <list string="Assembly Templates">
+                <field name="name"/>
+                <field name="category_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_assembly_template" model="ir.actions.act_window">
+        <field name="name">Assembly Templates</field>
+        <field name="res_model">bike.assembly.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
