@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bike_assembly_template,bike.assembly.template,model_bike_assembly_template,group_workshop_manager,1,1,1,1
+access_bike_assembly_template_read,bike.assembly.template,model_bike_assembly_template,group_workshop_technician,1,0,0,0
+access_bike_assembly_template_line,bike.assembly.template_line,model_bike_assembly_template_line,group_workshop_manager,1,1,1,1
+access_bike_assembly_template_line_read,bike.assembly.template_line,model_bike_assembly_template_line,group_workshop_technician,1,0,0,0
+access_bike_assembly_order,bike.assembly.order,model_bike_assembly_order,group_workshop_technician,1,1,0,0
+access_bike_assembly_order_manager,bike.assembly.order,model_bike_assembly_order,group_workshop_manager,1,1,1,1
+access_bike_assembly_checklist_line,bike.assembly.checklist_line,model_bike_assembly_checklist_line,group_workshop_technician,1,1,0,0
+access_bike_assembly_checklist_line_manager,bike.assembly.checklist_line,model_bike_assembly_checklist_line,group_workshop_manager,1,1,1,1
