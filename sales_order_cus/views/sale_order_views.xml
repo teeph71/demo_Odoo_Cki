@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_sale_ck_han" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale.ck.han</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Thêm trường override_note vào cuối phần thông tin chi tiết đơn hàng (order_details) -->
+            <xpath expr="//group[@name='order_details']" position="inside">
+                <field name="override_note" 
+                       placeholder="Nhập lý do ghi đè tồn kho (bắt buộc khi Quản lý đặt vượt tồn kho khả dụng)"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
