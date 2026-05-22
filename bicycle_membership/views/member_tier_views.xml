@@ -1,0 +1,62 @@
+<odoo>
+<!-- List View-->
+    <record id="view_bicycle_member_tier_list" model="ir.ui.view">
+        <field name="name">bicycle.member.tier.list</field>
+        <field name="model">bicycle.member.tier</field>
+        <field name="arch" type="xml">
+            <list string="Member Tiers">
+                <field name="name" string="Tier Name" width="200"/>
+                <field name="min_points" string="Minimum Points" width="120" optional="show"/>
+                <field name="discount_rate" string="Discount Rate(%)" width="120" optional="show"/>
+                <field name="points_multiplier" string="Points Multiplier" width="140" optional="show"/>
+                <field name="free_maintenance_sessions" string="Free Maintenance Sessions" width="180" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+<!-- Form View -->
+    <record id="view_bicycle_member_tier_form" model="ir.ui.view">
+        <field name="name">bicycle.member.tier.form</field>
+        <field name="model">bicycle.member.tier</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Tier Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Gold Member"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="REQUIREMENTS">
+                            <field name="min_points" string="Minimum Points"/>
+                        </group>
+                        <group string="BENEFITS">
+                            <field name="discount_rate" string="Discount Rate (%)"/>
+                            <field name="points_multiplier" string="Points Multiplier"/>
+                            <field name="free_maintenance_sessions" string="Free Maintenance Sessions"/>
+                        </group>
+                    </group>
+                    <separator string="BENEFITS DESCRIPTION"/>
+                    <field name="benefits_description" 
+                       widget="html" 
+                       options="{'style-inline': true, 'wrapper': true}"
+                       placeholder="Describe the rewards for this tier..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!-- Action and Menu -->
+    <record id="action_bicycle_member_tier" model="ir.actions.act_window">
+        <field name="name">Membership Tiers</field>
+        <field name="res_model">bicycle.member.tier</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_bicycle_member_tier"
+              name="Membership Tiers"
+              parent="sale.menu_sale_config"
+              action="action_bicycle_member_tier"
+              sequence="2"/>
+</odoo>
