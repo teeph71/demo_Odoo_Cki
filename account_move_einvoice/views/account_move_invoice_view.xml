@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_einvoice" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.einvoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//header" position="inside">
+                <button name="action_send_einvoice" 
+                        string="Phát hành e-Invoice" 
+                        type="object" 
+                        class="oe_highlight" 
+                        groups="account.group_account_invoice"
+                        invisible="state != 'posted' or einvoice_status == 'sent'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="einvoice_status" widget="badge" 
+                       decoration-success="einvoice_status == 'sent'" 
+                       decoration-info="einvoice_status == 'draft'"/>
+                <field name="einvoice_code" invisible="einvoice_status != 'sent'"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
