@@ -26,7 +26,7 @@ class ResPartner(models.Model):
         store=True
     )
 
-    # Chuẩn hoá tên khi tạo
+    # Chuẩn hoá tên
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -34,23 +34,24 @@ class ResPartner(models.Model):
                 vals['name'] = self._normalize_name(vals['name'])
         return super().create(vals_list)
 
-    # Chuẩn hoá tên khi update
+    # Chuẩn hoá tên khi update nếu field name có thay đổi
     def write(self, vals):
         if 'name' in vals and vals.get('name'):
             vals['name'] = self._normalize_name(vals['name'])
         return super().write(vals)
 
+    #cho phép số và các ký tự đặc biệt theo luật
     def _normalize_name(self, name):
         if not name:
             return name
 
-        cleaned_name = re.sub(r'[^A-Za-zÀ-ỹ\s]', '', name)
+        cleaned_name = re.sub(r'[^A-Za-z0-9À-ỹ\s\.\-_&\+\(\)]', '', name)
 
         cleaned_name = ' '.join(cleaned_name.split())
 
         return cleaned_name.title()
 
-    # Validate phone
+    # Ràng buộc số điện thoại và email
     @api.constrains('phone')
     def _check_phone(self):
         for record in self:
@@ -65,7 +66,6 @@ class ResPartner(models.Model):
             if len(phone) != 10:
                 raise ValidationError('Số điện thoại phải gồm đúng 10 số!')
 
-    # Validate email
     @api.constrains('email')
     def _check_email(self):
         email_regex = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
@@ -76,37 +76,43 @@ class ResPartner(models.Model):
                 if not re.match(email_regex, email):
                     raise ValidationError('Email không đúng định dạng!')
 
-    # Unique phone & email
+    # Ràng buộc duy nhất cho số điện thoại và email
     @api.constrains('phone', 'email')
     def _check_unique_contact(self):
         for record in self:
+            #Check phone unique
             if record.phone:
-                if self.search_count([
+                existing_phone = self.search([
                     ('id', '!=', record.id),
                     ('phone', '=', record.phone)
-                ]):
+                ],limit=1)
+                if existing_phone:
                     raise ValidationError('Số điện thoại đã tồn tại!')
 
+            #Check email unique
             if record.email:
-                if self.search_count([
+                existing_email = self.search([
                     ('id', '!=', record.id),
                     ('email', '=', record.email)
-                ]):
+                ],limit=1)
+                if existing_email:
                     raise ValidationError('Email đã tồn tại!')
 
-    # Compute tier
+    # Tính toán hạng thành viên dựa trên điểm tích luỹ
     @api.depends('x_loyalty_points', 'x_is_member')
     def _compute_member_tier(self):
-        tiers = self.env['bicycle.member.tier'].search(
-            [], order='min_points desc'
+        all_tiers = self.env['bicycle.member.tier'].search(
+            [], 
+            order='min_points desc'
         )
-
         for partner in self:
             if not partner.x_is_member:
                 partner.x_member_tier_id = False
                 continue
 
-            partner.x_member_tier_id = next(
-                (t for t in tiers if partner.x_loyalty_points >= t.min_points),
-                False
-            )
+            matching_tier = False
+            for tier in all_tiers:
+                if partner.x_loyalty_points >= tier.min_points:
+                    matching_tier = tier
+                    break
+            partner.x_member_tier_id = matching_tier    
