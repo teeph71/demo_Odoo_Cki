@@ -23,13 +23,17 @@
                     </div>
                 </xpath>
 
-                <!-- 3. Tab Thông tin khác -->
-                <xpath expr="//page[@name='other_information']" position="inside">
-                    <group string="Cancellation Information" invisible="not x_is_lost">
+                <!-- 3. Tab Lý do huỷ -->
+                <xpath expr="//notebook" position="inside">
+                <page string="Cancellation Information"
+                    name="cancellation_information"
+                    invisible="not x_is_lost">
+                    <group>
                         <field name="x_lost_reason_id" readonly="1" options="{'no_open': True}"/>
                         <field name="x_lost_note" readonly="1"/>
                     </group>
-                </xpath>
+                </page>
+            </xpath>
             </field>
         </record>
 
