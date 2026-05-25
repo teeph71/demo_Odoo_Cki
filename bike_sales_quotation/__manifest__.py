@@ -1,6 +1,6 @@
 
 {
-    'name': 'Bike Sales Quotation Extension',
+    'name': 'Bike Sales Quotation',
     'version': '1.1',
     'depends': ['sale', 'bicycle_membership'],
     'category': 'Sales',
