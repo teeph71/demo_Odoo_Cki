@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_warranty" model="ir.ui.view">
+            <field name="name">res.config.settings.view.warranty</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form" position="inside">
+                    <app string="Bảo Hành"
+                         name="bike_warranty"
+                         data-string="Bảo Hành"
+                         logo="/bike_warranty/static/description/icon.png">
+
+                        <block title="Cấu Hình Phiếu Bảo Hành"
+                               name="warranty_config_block">
+
+                            <setting id="warranty_categories_setting"
+                                     string="Loại sản phẩm cần phiếu bảo hành"
+                                     help="Chọn các loại sản phẩm sẽ tự động tạo phiếu bảo hành khi xác nhận đơn hàng. Ví dụ: Xe đạp, Xe máy điện. Phụ kiện (mũ, chai nước,...) không cần chọn.">
+                                <field
+                                    name="warranty_category_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Chọn loại sản phẩm..."
+                                    options="{'no_create': True}"
+                                    nolabel="1"
+                                />
+                            </setting>
+
+                        </block>
+                    </app>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_bike_warranty" model="ir.actions.report">
+            <field name="name">Phiếu Bảo Hành</field>
+            <field name="model">bike.warranty</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">bike_warranty.report_bike_warranty_template</field>
+            <field name="report_file">bike_warranty.report_bike_warranty_template</field>
+            <field name="print_report_name">'Phieu_Bao_Hanh_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_bike_warranty"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

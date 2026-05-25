@@ -1,0 +1,27 @@
+{
+    'name': 'Quản Lý Phiếu Bảo Hành Xe',
+    'version': '1.0',
+    'summary': 'Tạo phiếu bảo hành tự động từ Sales Order theo loại sản phẩm',
+    'description': 'Module quản lý phiếu bảo hành xe cho khách hàng.',
+    'category': 'Sales',
+    'author': 'Nhóm Dự Án ERP',
+    'depends': [
+        'sale',
+        'product',
+        'product_warranty',
+        'base_setup',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/ir_sequence.xml',
+        'views/res_config_settings_view.xml',
+        'views/bike_warranty_views.xml',
+        'views/sale_order_views.xml',
+        'views/menu_views.xml',
+        'report/warranty_report.xml',
+        'report/warranty_report_template.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}
