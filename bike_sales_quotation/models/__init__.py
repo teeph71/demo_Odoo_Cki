@@ -1,3 +1,2 @@
 from . import sale_order
 from . import sale_lost_reason
-from . import res_partner
