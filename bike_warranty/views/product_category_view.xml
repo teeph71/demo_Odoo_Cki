@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Thêm checkbox "Cần phiếu bảo hành" vào form Product Category.
+            Vào: Cấu hình → Danh mục sản phẩm → chọn category → bật toggle.
+            Ví dụ: "Xe đạp" ✅  |  "Phụ kiện" ❌  |  "Mũ bảo hiểm" ❌
+        -->
+        <record id="product_category_form_view_warranty_inherit"
+                model="ir.ui.view">
+            <field name="name">product.category.form.warranty.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field
+                        name="needs_warranty_card"
+                        widget="boolean_toggle"
+                        string="Cần phiếu bảo hành khi bán"
+                    />
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

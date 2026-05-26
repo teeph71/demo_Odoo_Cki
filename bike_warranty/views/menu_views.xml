@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_bike_warranty_root" name="Bảo Hành" sequence="50"
+            web_icon="bike_warranty,static/description/icon.png"/>
+
+        <menuitem id="menu_bike_warranty_warranty" name="Phiếu Bảo Hành"
+            parent="menu_bike_warranty_root" sequence="10"/>
+
+        <menuitem id="menu_bike_warranty_all" name="Tất Cả Phiếu"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty" sequence="10"/>
+
+        <menuitem id="menu_bike_warranty_active" name="Đang Hiệu Lực"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty_active" sequence="20"/>
+
+        <menuitem id="menu_bike_warranty_expiring" name="Sắp Hết Hạn (30 Ngày)"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty_expiring_soon" sequence="30"/>
+
+    </data>
+</odoo>
