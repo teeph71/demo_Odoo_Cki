@@ -7,7 +7,6 @@
         'for bike assembly flow.'
     ),
     'category': 'Inventory',
-    'author': 'Odoo Consultant',
     'depends': ['stock', 'sale_management'],
     'data': [
         'views/product_template_views.xml',
