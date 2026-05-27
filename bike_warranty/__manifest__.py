@@ -1,8 +1,8 @@
 {
-    'name': 'Quản Lý Phiếu Bảo Hành Xe',
+    'name': 'Warranty Management',
     'version': '1.0',
-    'summary': 'Tạo phiếu bảo hành tự động từ Sales Order theo loại sản phẩm',
-    'description': 'Module quản lý phiếu bảo hành xe cho khách hàng.',
+    'summary': 'Automatically create warranty cards from Sales Orders by product category',
+    'description': 'Module for managing bike warranty cards for customers.',
     'category': 'Sales',
     'author': 'Nhóm Dự Án ERP',
     'depends': [

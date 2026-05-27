@@ -20,7 +20,7 @@
                         <field
                             name="warranty_count"
                             widget="statinfo"
-                            string="Phiếu BH"
+                            string="Warranties"
                         />
                     </button>
                 </xpath>
@@ -28,7 +28,7 @@
                 <xpath expr="//button[@name='action_cancel']" position="before">
                     <button
                         name="action_create_warranty_from_so"
-                        string="🛡️ Tạo Phiếu BH Thủ Công"
+                        string="🛡️ Create Warranty Manually"
                         type="object"
                         class="btn-secondary"
                         invisible="state not in ['sale', 'done']"

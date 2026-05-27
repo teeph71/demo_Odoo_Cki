@@ -6,7 +6,7 @@
              ACTIONS
         ═══════════════════════════════════════════════════════ -->
         <record id="action_bike_warranty" model="ir.actions.act_window">
-            <field name="name">Phiếu Bảo Hành</field>
+            <field name="name">Warranty Cards</field>
             <field name="res_model">bike.warranty</field>
             <field name="view_mode">list,form</field>
             <field name="help" type="html">
@@ -18,14 +18,14 @@
         </record>
 
         <record id="action_bike_warranty_active" model="ir.actions.act_window">
-            <field name="name">Phiếu Đang Hiệu Lực</field>
+            <field name="name">Active Warranties</field>
             <field name="res_model">bike.warranty</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('state', '=', 'active')]</field>
         </record>
 
         <record id="action_bike_warranty_expiring_soon" model="ir.actions.act_window">
-            <field name="name">Sắp Hết Hạn (30 Ngày)</field>
+            <field name="name">Expiring Soon (30 Days)</field>
             <field name="res_model">bike.warranty</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[
@@ -43,7 +43,7 @@
             <field name="model">bike.warranty</field>
             <field name="arch" type="xml">
                 <list
-                    string="Phiếu Bảo Hành"
+                    string="Warranty Cards"
                     decoration-success="state == 'active'"
                     decoration-warning="state == 'draft'"
                     decoration-danger="state == 'expired'"
@@ -80,14 +80,14 @@
                     <header>
                         <button
                             name="action_activate"
-                            string="Kích Hoạt"
+                            string="Activate"
                             type="object"
                             class="btn-primary"
                             invisible="state != 'draft'"
                         />
                         <button
                             name="action_cancel"
-                            string="Hủy Phiếu"
+                            string="Cancel Warranty"
                             type="object"
                             class="btn-danger"
                             invisible="state not in ['draft', 'active']"
@@ -95,13 +95,13 @@
                         />
                         <button
                             name="action_reset_draft"
-                            string="Đặt Lại Nháp"
+                            string="Reset to Draft"
                             type="object"
                             invisible="state != 'cancelled'"
                         />
                         <button
                             name="action_print_warranty"
-                            string="🖨️ In Phiếu BH"
+                            string="🖨️ Print Warranty"
                             type="object"
                             class="btn-secondary"
                             invisible="state == 'draft'"
@@ -119,7 +119,7 @@
                             </h1>
                         </div>
                         <group col="2">
-                            <group string="Thông Tin Phiếu Bảo Hành">
+                            <group string="Warranty Information">
                                 <field name="sale_order_id"/>
                                 <field name="sale_order_line_id"
                                     invisible="not sale_order_id"
@@ -128,13 +128,13 @@
                                 <field name="end_date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-                            <group string="Thông Tin Sản Phẩm">
+                            <group string="Product Information">
                                 <field name="product_id" required="1"/>
                                 <field name="product_category_id" readonly="1"/>
                                 <field name="warranty_duration" required="1"/>
                             </group>
                         </group>
-                        <group string="Thông Tin Khách Hàng">
+                        <group string="Customer Information">
                             <group>
                                 <field name="partner_id" required="1"/>
                                 <field name="partner_name"/>
@@ -146,7 +146,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Ghi Chú">
+                            <page string="Notes">
                                 <field
                                     name="note"
                                     placeholder="Nhập ghi chú hoặc điều kiện bảo hành..."
