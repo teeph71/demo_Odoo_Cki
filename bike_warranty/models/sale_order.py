@@ -7,10 +7,10 @@ class SaleOrder(models.Model):
     warranty_ids = fields.One2many(
         comodel_name='bike.warranty',
         inverse_name='sale_order_id',
-        string='Phiếu Bảo Hành',
+        string='Warranty Cards',
     )
     warranty_count = fields.Integer(
-        string='Số phiếu BH',
+        string='Warranty Count',
         compute='_compute_warranty_count',
     )
 
@@ -22,14 +22,14 @@ class SaleOrder(models.Model):
     # ─── Tự động tạo phiếu BH khi xác nhận SO ───────────────────────────────
 
     def action_confirm(self):
-        """Override: tự động tạo phiếu bảo hành sau khi xác nhận SO."""
+        """Override: automatically create warranty cards after confirming SO."""
         res = super().action_confirm()
         for order in self:
             order._auto_create_warranty_cards()
         return res
 
     def _get_warranty_category_ids(self):
-        """Đọc danh sách category ID được cấu hình trong Settings."""
+        """Read the list of category IDs configured in Settings."""
         param = self.env['ir.config_parameter'].sudo().get_param(
             'bike_warranty.warranty_category_ids', ''
         )
@@ -37,19 +37,19 @@ class SaleOrder(models.Model):
 
     def _auto_create_warranty_cards(self):
         """
-        Tạo phiếu bảo hành tự động cho từng dòng sản phẩm trong SO.
+        Automatically create warranty cards for each product line in the SO.
 
-        Điều kiện để tạo phiếu BH:
-          1. product.category nằm trong danh sách cấu hình tại Settings
-             (không thêm field vào master data product.category)
+        Conditions for creating a warranty card:
+          1. product.category is in the list configured in Settings
+             (no extra field added to product.category master data)
           2. product.warranty_duration > 0
 
-        Bỏ qua: phụ kiện, mũ bảo hiểm, chai nước,...
-        (những category không được chọn trong Settings)
+        Skip: accessories, helmets, water bottles, etc.
+        (categories not selected in Settings)
         """
         warranty_category_ids = self._get_warranty_category_ids()
         if not warranty_category_ids:
-            return  # Chưa cấu hình → bỏ qua
+            return  # Not configured → skip
 
         start_date = (
             self.date_order.date() if self.date_order else fields.Date.today()
@@ -57,17 +57,17 @@ class SaleOrder(models.Model):
         warranties_to_create = []
 
         for line in self.order_line:
-            # Điều kiện 1: category phải nằm trong danh sách cấu hình
+            # Condition 1: category must be in the configured list
             if line.product_id.categ_id.id not in warranty_category_ids:
                 continue
 
-            # Điều kiện 2: sản phẩm phải có thời hạn bảo hành > 0
+            # Condition 2: product must have warranty_duration > 0
             template = line.product_id.product_tmpl_id
             warranty_duration = getattr(template, 'warranty_duration', 0) or 0
             if warranty_duration <= 0:
                 continue
 
-            # Tạo 1 phiếu BH cho mỗi số lượng trong dòng SO
+            # Create 1 warranty card per quantity in the SO line
             qty = int(line.product_uom_qty) or 1
             for _ in range(qty):
                 warranties_to_create.append({
@@ -87,7 +87,7 @@ class SaleOrder(models.Model):
     # ─── Smart button ─────────────────────────────────────────────────────────
 
     def action_view_warranties(self):
-        """Smart button: xem tất cả phiếu BH của SO này."""
+        """Smart button: view all warranty cards for this SO."""
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id(
             'bike_warranty.action_bike_warranty'
@@ -103,11 +103,11 @@ class SaleOrder(models.Model):
         return action
 
     def action_create_warranty_from_so(self):
-        """Mở form tạo phiếu bảo hành thủ công từ SO hiện tại."""
+        """Open form to manually create a warranty card from the current SO."""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Tạo Phiếu Bảo Hành',
+            'name': 'Create Warranty Card',
             'res_model': 'bike.warranty',
             'view_mode': 'form',
             'context': {

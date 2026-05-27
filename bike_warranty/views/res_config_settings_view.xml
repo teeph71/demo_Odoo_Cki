@@ -9,17 +9,17 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//form" position="inside">
-                    <app string="Bảo Hành"
+                    <app string="Warranty"
                          name="bike_warranty"
-                         data-string="Bảo Hành"
+                         data-string="Warranty"
                          logo="/bike_warranty/static/description/icon.png">
 
-                        <block title="Cấu Hình Phiếu Bảo Hành"
+                        <block title="Warranty Card Configuration"
                                name="warranty_config_block">
 
                             <setting id="warranty_categories_setting"
-                                     string="Loại sản phẩm cần phiếu bảo hành"
-                                     help="Chọn các loại sản phẩm sẽ tự động tạo phiếu bảo hành khi xác nhận đơn hàng. Ví dụ: Xe đạp, Xe máy điện. Phụ kiện (mũ, chai nước,...) không cần chọn.">
+                                     string="Product categories requiring warranty cards"
+                                     help="Select product categories that will automatically generate warranty cards when a sales order is confirmed. E.g.: Bicycles, Electric scooters. Accessories (helmets, water bottles, etc.) do not need to be selected.">
                                 <field
                                     name="warranty_category_ids"
                                     widget="many2many_tags"
