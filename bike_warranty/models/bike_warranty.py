@@ -164,12 +164,20 @@ class BikeWarranty(models.Model):
 
     @api.onchange('sale_order_line_id')
     def _onchange_sale_order_line_id(self):
-        """Tự động điền sản phẩm và thời hạn BH khi chọn dòng SO."""
+        """Auto-fill product and warranty duration when selecting an order line."""
         if self.sale_order_line_id:
             product = self.sale_order_line_id.product_id
             self.product_id = product
             template = product.product_tmpl_id
             if hasattr(template, 'warranty_duration'):
+                self.warranty_duration = template.warranty_duration
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        """Auto-fill warranty duration when selecting a product directly."""
+        if self.product_id and not self.sale_order_line_id:
+            template = self.product_id.product_tmpl_id
+            if hasattr(template, 'warranty_duration') and template.warranty_duration:
                 self.warranty_duration = template.warranty_duration
 
     # ─── Constraints ──────────────────────────────────────────────────────────
