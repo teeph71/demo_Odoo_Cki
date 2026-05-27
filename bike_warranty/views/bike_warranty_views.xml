@@ -167,28 +167,28 @@
             <field name="name">bike.warranty.search</field>
             <field name="model">bike.warranty</field>
             <field name="arch" type="xml">
-                <search string="Tìm kiếm phiếu bảo hành">
-                    <field name="name" string="Mã phiếu BH"/>
-                    <field name="partner_name" string="Tên khách hàng"/>
-                    <field name="partner_phone" string="Số điện thoại"/>
-                    <field name="product_id" string="Sản phẩm"/>
-                    <field name="sale_order_id" string="Đơn hàng"/>
+                <search string="Search Warranty Cards">
+                    <field name="name" string="Warranty Code"/>
+                    <field name="partner_name" string="Customer Name"/>
+                    <field name="partner_phone" string="Phone"/>
+                    <field name="product_id" string="Product"/>
+                    <field name="sale_order_id" string="Sales Order"/>
                     <separator/>
-                    <filter name="filter_active" string="Đang hiệu lực"
+                    <filter name="filter_active" string="Active"
                         domain="[('state', '=', 'active')]"/>
-                    <filter name="filter_expired" string="Hết hạn"
+                    <filter name="filter_expired" string="Expired"
                         domain="[('state', '=', 'expired')]"/>
-                    <filter name="filter_draft" string="Nháp"
+                    <filter name="filter_draft" string="Draft"
                         domain="[('state', '=', 'draft')]"/>
                     <separator/>
                     <group>
-                        <filter name="group_state" string="Trạng thái"
+                        <filter name="group_state" string="Status"
                             context="{'group_by': 'state'}"/>
-                        <filter name="group_category" string="Loại sản phẩm"
+                        <filter name="group_category" string="Product Category"
                             context="{'group_by': 'product_category_id'}"/>
-                        <filter name="group_start_month" string="Tháng bắt đầu BH"
+                        <filter name="group_start_month" string="Warranty Start Month"
                             context="{'group_by': 'start_date:month'}"/>
-                        <filter name="group_partner" string="Khách hàng"
+                        <filter name="group_partner" string="Customer"
                             context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>

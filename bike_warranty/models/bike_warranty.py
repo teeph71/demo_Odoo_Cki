@@ -5,14 +5,14 @@ from dateutil.relativedelta import relativedelta
 
 class BikeWarranty(models.Model):
     _name = 'bike.warranty'
-    _description = 'Phiếu Bảo Hành Xe'
+    _description = 'Bike Warranty Card'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name desc'
     _rec_name = 'name'
 
     # ─── Thông tin phiếu ─────────────────────────────────────────────────────
     name = fields.Char(
-        string='Mã Phiếu Bảo Hành',
+        string='Warranty Code',
         readonly=True,
         copy=False,
         default='New',
@@ -20,46 +20,46 @@ class BikeWarranty(models.Model):
     )
     state = fields.Selection(
         selection=[
-            ('draft', 'Nháp'),
-            ('active', 'Đang hiệu lực'),
-            ('expired', 'Hết hạn'),
-            ('cancelled', 'Đã hủy'),
+            ('draft', 'Draft'),
+            ('active', 'Active'),
+            ('expired', 'Expired'),
+            ('cancelled', 'Cancelled'),
         ],
-        string='Trạng thái',
+        string='Status',
         default='draft',
         tracking=True,
         copy=False,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
-        string='Công ty',
+        string='Company',
         default=lambda self: self.env.company,
         required=True,
     )
-    note = fields.Text(string='Ghi chú')
+    note = fields.Text(string='Notes')
 
     # ─── Liên kết đơn hàng ───────────────────────────────────────────────────
     sale_order_id = fields.Many2one(
         comodel_name='sale.order',
-        string='Đơn hàng',
+        string='Sales Order',
         tracking=True,
         domain=[('state', 'in', ['sale', 'done'])],
     )
     sale_order_line_id = fields.Many2one(
         comodel_name='sale.order.line',
-        string='Dòng sản phẩm',
+        string='Order Line',
         domain="[('order_id', '=', sale_order_id)]",
     )
 
     # ─── Thông tin sản phẩm ──────────────────────────────────────────────────
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string='Sản phẩm',
+        string='Product',
         tracking=True,
     )
     product_category_id = fields.Many2one(
         comodel_name='product.category',
-        string='Loại sản phẩm',
+        string='Product Category',
         compute='_compute_product_info',
         store=True,
     )
@@ -70,12 +70,12 @@ class BikeWarranty(models.Model):
 
     # ─── Thời gian bảo hành ──────────────────────────────────────────────────
     start_date = fields.Date(
-        string='Ngày bắt đầu bảo hành',
+        string='Warranty Start Date',
         default=fields.Date.today,
         tracking=True,
     )
     end_date = fields.Date(
-        string='Ngày hết hạn bảo hành',
+        string='Warranty End Date',
         compute='_compute_end_date',
         store=True,
         tracking=True,
@@ -84,29 +84,29 @@ class BikeWarranty(models.Model):
     # ─── Thông tin khách hàng ────────────────────────────────────────────────
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        string='Khách hàng',
+        string='Customer',
         tracking=True,
     )
     partner_name = fields.Char(
-        string='Tên khách hàng',
+        string='Customer Name',
         compute='_compute_partner_info',
         store=True,
         readonly=False,
     )
     partner_phone = fields.Char(
-        string='Số điện thoại',
+        string='Phone',
         compute='_compute_partner_info',
         store=True,
         readonly=False,
     )
     partner_street = fields.Char(
-        string='Địa chỉ',
+        string='Address',
         compute='_compute_partner_info',
         store=True,
         readonly=False,
     )
     partner_city = fields.Char(
-        string='Thành phố',
+        string='City',
         compute='_compute_partner_info',
         store=True,
         readonly=False,
