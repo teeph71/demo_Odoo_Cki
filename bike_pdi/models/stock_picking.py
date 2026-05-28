@@ -33,6 +33,7 @@ class StockPicking(models.Model):
                                     for t_line in template.line_ids:
                                         checklist_vals.append((0, 0, {
                                             'item_name': t_line.name,
+                                            'note': t_line.note,
                                         }))
 
                                 PdiOrder.create({

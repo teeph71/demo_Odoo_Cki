@@ -15,3 +15,4 @@ class BikePdiTemplateLine(models.Model):
     template_id = fields.Many2one('bike.pdi.template', string='Template', ondelete='cascade')
     name = fields.Char(string='Task Name', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
+    note = fields.Text(string='Note')
