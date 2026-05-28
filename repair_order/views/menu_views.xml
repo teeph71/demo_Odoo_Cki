@@ -1,0 +1,23 @@
+<odoo>
+    <menuitem id="bike_repair_root_menu"
+              name="Repair Management"
+              sequence="10"/>
+
+    <menuitem id="bike_repair_order_menu"
+              name="Repair Orders"
+              parent="bike_repair_root_menu"
+              action="action_bike_repair_order"
+              sequence="3"/>
+
+    <menuitem id="bike_repair_package_menu"
+              name="Repair Packages"
+              parent="bike_repair_root_menu"
+              action="bike_repair_service_package_action"
+              sequence="5"/>
+
+    <menuitem id="bike_repair_checklist_template_menu"
+              name="Repair Checklist Templates"
+              parent="bike_repair_root_menu"
+              action="bike_repair_checklist_template_action"
+              sequence="7"/>
+</odoo>

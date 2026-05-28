@@ -1,5 +1,4 @@
 <odoo>
-
     <record id="view_sale_lost_reason_search" model="ir.ui.view">
     <field name="name">sale.lost.reason.search</field>
     <field name="model">sale.lost.reason</field>
@@ -23,7 +22,7 @@
         </field>
     </record>
 
-    <!-- Form View: Chia cột chuyên nghiệp -->
+    <!-- Form View -->
     <record id="view_sale_lost_reason_form" model="ir.ui.view">
         <field name="name">sale.lost.reason.form</field>
         <field name="model">sale.lost.reason</field>

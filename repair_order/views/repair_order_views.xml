@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW (Danh sách đơn sửa chữa) -->
+    <record id="view_bike_repair_order_list" model="ir.ui.view">
+        <field name="name">bike.repair.order.list</field>
+        <field name="model">bike.repair.order</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" 
+                  decoration-warning="state == 'confirmed'" 
+                  decoration-success="state == 'done'" 
+                  decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="bicycle_name"/>
+                <field name="service_package_id"/>
+                <field name="technician_id" widget="many2one_avatar_user"/>
+                <field name="total_amount" sum="Total" widget="monetary"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'draft'" 
+                       decoration-warning="state == 'confirmed'" 
+                       decoration-primary="state == 'repairing'" 
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW (Chi tiết đơn sửa chữa) -->
+    <record id="view_bike_repair_order_form" model="ir.ui.view">
+        <field name="name">bike.repair.order.form</field>
+        <field name="model">bike.repair.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm &amp; Create SO" 
+                            type="object" class="oe_highlight" 
+                            invisible="state != 'draft'"/>
+
+                    <button name="action_start_repair" string="Start Repairing" 
+                            type="object" class="oe_highlight" 
+                            invisible="state != 'confirmed'"/>
+
+                    <button name="action_done" string="Complete Repair" 
+                            type="object" class="oe_highlight" 
+                            invisible="state != 'repairing'"/>
+
+                    <button name="action_cancel" string="Cancel" type="object" 
+                            invisible="state in ['done', 'cancel']"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,repairing,done"/>
+                </header>
+                <sheet>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale_order" type="object" class="oe_stat_button" 
+                                icon="fa-usd" invisible="not sale_order_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sales Order</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Customer &amp; Vehicle">
+                            <field name="customer_id" widget="res_partner_many2one" 
+                                   readonly="state != 'draft'"/>
+                            <field name="bicycle_name" readonly="state == 'done'"/>
+                            <field name="serial_number" readonly="state == 'done'"/>
+                            <field name="warranty_card_id" readonly="state == 'done'"/>
+                        </group>
+                        <group string="Service Details">
+                            <field name="service_package_id" readonly="state != 'draft'"/>
+                            <field name="technician_id" widget="many2one_avatar_user"
+                                   required="state == 'confirmed'"
+                                   readonly="state in ['done', 'cancel']"/>
+                            <field name="assigned_by" groups="base.group_no_one"/>
+                            <field name="assigned_at" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Customer &amp; Pricing" name="membership_info">
+                            <group>
+                                <group string="Membership Status">
+                                    <field name="x_is_member_display" string="Is Member"/>
+                                    <field name="x_member_tier_id_display" string="Current Tier"/>
+                                </group>
+                                <group string="Financial Summary" name="financial_summary">
+                                    <field name="labor_cost" widget="monetary" readonly="state == 'done'"/>
+                                    <field name="parts_cost" widget="monetary" readonly="state == 'done'"/>
+                                    <field name="membership_discount" widget="monetary" class="text-danger"/>
+                                    <field name="warranty_discount" widget="monetary" class="text-danger"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="total_amount"/>
+                                    </div>
+                                    <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Diagnosis" name="diagnosis">
+                            <group>
+                                <field name="problem_description" placeholder="Mô tả tình trạng từ khách hàng..." readonly="state == 'done'"/>
+                                <field name="diagnosis" placeholder="Kết quả kiểm tra của kỹ thuật viên..." readonly="state == 'done'"/>
+                            </group>
+                        </page>
+
+                        <page string="Repair Checklist" name="checklist" 
+                              invisible="state not in ['repairing', 'done']">
+                            <field name="checklist_line_ids" readonly="state == 'done'">
+                                <list editable="bottom" decoration-success="completed == True">
+                                    <field name="name" string="Task / Step"/>
+                                    <field name="completed" string="Done?"/>
+                                    <field name="notes" placeholder="Ghi chú thêm..."/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_bike_repair_order" model="ir.actions.act_window">
+        <field name="name">Repair Orders</field>
+        <field name="res_model">bike.repair.order</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first bike repair order!
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+<odoo>
+    <record id="seq_bike_repair_order" model="ir.sequence">
+        <field name="name">Bike Repair Order</field>
+        <field name="code">bike.repair.order</field>
+        <field name="prefix">BRO/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>
