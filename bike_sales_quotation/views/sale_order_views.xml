@@ -1,19 +1,19 @@
 <odoo>
     <data>
-    <!-- Inherit Sale Order Form View  -->
+        <!-- 1. Form View   -->
         <record id="view_order_form_inherit_bike_complete" model="ir.ui.view">
             <field name="name">sale.order.form.inherit.bike.complete</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <!-- 1. Nút Lost -->
+                <!-- 1. Lost Button-->
                 <xpath expr="//header/button[@name='action_confirm']" position="after">
                     <button name="action_mark_lost" string="Lost" type="object" 
                             class="btn-secondary" 
                             invisible="state not in ['draft', 'sent'] or x_is_lost"/>
                 </xpath>
 
-                <!-- 2. Hiển thị Hạng khách hàng -->
+                <!-- 2. Customer Tier Display -->
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="x_is_member_display" invisible="1"/>
                     <label for="x_member_tier_id_display" string="Customer Tier" invisible="not partner_id"/>
@@ -23,7 +23,7 @@
                     </div>
                 </xpath>
 
-                <!-- 3. Tab Lý do huỷ -->
+                <!-- 3. Cancellation Information Tab -->
                 <xpath expr="//notebook" position="inside">
                 <page string="Cancellation Information"
                     name="cancellation_information"

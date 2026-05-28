@@ -12,12 +12,10 @@ class QuotationLostWizard(models.TransientModel):
     lost_reason_id = fields.Many2one('sale.lost.reason', string='Reason', required=True)
     note = fields.Text(string="Note")
 
-    # Hàm xử lý khi người dùng xác nhận hành động
     def action_confirm(self):
         self.ensure_one()
         sale = self.sale_order_id
 
-        # 1. Hủy đơn hiện tại
         sale.write({
             'x_is_lost': True,
             'x_lost_reason_id': self.lost_reason_id.id,
@@ -25,7 +23,6 @@ class QuotationLostWizard(models.TransientModel):
             'state': 'cancel',
         })
 
-        # 2. Xử lý tạo Revision
         if self.action_type == 'lost_revision':
             base_name = sale.name.split('-REV')[0]
             next_rev = sale.x_revision_no + 1
@@ -41,7 +38,6 @@ class QuotationLostWizard(models.TransientModel):
                 'x_lost_note': False,
             })
 
-            # Mở thẳng đơn hàng mới
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'sale.order',
@@ -50,5 +46,4 @@ class QuotationLostWizard(models.TransientModel):
                 'target': 'current',
             }
 
-        # 3. Nếu chỉ Mark Lost thì chỉ đóng Wizard
         return {'type': 'ir.actions.act_window_close'}
