@@ -35,5 +35,7 @@ class ResConfigSettings(models.TransientModel):
         category_ids = [
             int(x) for x in param.split(',') if x.strip().isdigit()
         ]
-        res['warranty_category_ids'] = [(6, 0, category_ids)]
+        # Lọc bỏ các ID không còn tồn tại trong DB để tránh lỗi "Missing Record"
+        existing_ids = self.env['product.category'].sudo().browse(category_ids).exists().ids
+        res['warranty_category_ids'] = [(6, 0, existing_ids)]
         return res
