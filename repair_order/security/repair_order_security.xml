@@ -1,0 +1,11 @@
+<odoo>
+    <record id="bike_repair_order_rule_technician" model="ir.rule">
+        <field name="name">Repair Order: technician sees own tasks</field>
+        <field name="model_id" ref="model_bike_repair_order"/>
+        <field name="domain_force">['|',('technician_id','=',user.id),('create_uid','=',user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+</odoo>

@@ -1,13 +1,43 @@
 <odoo>
+    <record id="view_sale_lost_reason_search" model="ir.ui.view">
+    <field name="name">sale.lost.reason.search</field>
+    <field name="model">sale.lost.reason</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+        </search>
+    </field>
+    </record>
+
     <!-- List for Sale Lost Reason -->
     <record id="view_sale_lost_reason_list" model="ir.ui.view">
         <field name="name">sale.lost.reason.list</field>
         <field name="model">sale.lost.reason</field>
         <field name="arch" type="xml">
-            <list editable="bottom">
+            <list>
                 <field name="name"/>
                 <field name="description"/>
             </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_sale_lost_reason_form" model="ir.ui.view">
+        <field name="name">sale.lost.reason.form</field>
+        <field name="model">sale.lost.reason</field>
+
+        <field name="arch" type="xml">
+            <form string="Lost Reason">
+                <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active == True"/>
+                    <group>
+                        <field name="name" placeholder="e.g., High Price"/>
+                        <field name="active" invisible="1"/>
+                        <field name="description" placeholder="e.g., The product is too expensive"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -24,3 +54,4 @@
               parent="sale.menu_sale_config" 
               sequence="5"/>
 </odoo>
+

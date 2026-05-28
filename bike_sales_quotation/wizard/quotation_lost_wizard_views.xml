@@ -10,7 +10,7 @@
                 </group>
                 <group>
                     <group>
-                        <field name="lost_reason_id" options="{'no_create': False, 'no_open': True}"/>
+                        <field name="lost_reason_id" options="{'no_create': False, 'no_open': False}"/>
                     </group>
                     <group>
                         <field name="note" placeholder="Note..."/>
