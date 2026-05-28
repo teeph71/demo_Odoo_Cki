@@ -120,6 +120,26 @@ class BikePackingOrder(models.Model):
             if order.state != 'packing':
                 raise UserError("Only packing state can be completed.")
             
+            # Re-check PDI and Assembly
+            if order.picking_id:
+                is_bike_order = any(move.product_id.is_bike for move in order.picking_id.move_ids)
+                if is_bike_order:
+                    # Check PDI
+                    pdi_orders = self.env['bike.pdi.order'].search([('picking_id', '=', order.picking_id.id)])
+                    if not pdi_orders:
+                        raise UserError("Cannot complete packing. It is a bike order but has no PDI records.")
+                    if any(p.state != 'passed' for p in pdi_orders):
+                        raise UserError("Cannot complete packing. Not all PDI records have passed.")
+                    
+                    # Check Assembly
+                    requires_assembly = any(move.product_id.is_bike and move.product_id.is_assembly_required for move in order.picking_id.move_ids)
+                    if requires_assembly:
+                        assembly_orders = self.env['bike.assembly.order'].search([('picking_id', '=', order.picking_id.id)])
+                        if not assembly_orders:
+                            raise UserError("Cannot complete packing. It requires assembly but has no assembly records.")
+                        if any(a.state != 'completed' for a in assembly_orders):
+                            raise UserError("Cannot complete packing. Not all assembly records are completed.")
+            
             unchecked_lines = order.checklist_line_ids.filtered(lambda l: not l.checked)
             if unchecked_lines:
                 raise UserError("You must check all checklist items before completing the packing.")

@@ -16,12 +16,16 @@ class BikePdiOrder(models.Model):
     serial_id = fields.Many2one('stock.lot', string='Frame Serial', readonly=True)
     technician_id = fields.Many2one('res.users', string='Technician', tracking=True)
     
+    @api.model
+    def _read_group_state(self, *args, **kwargs):
+        return ['pending', 'in_progress', 'passed', 'failed']
+
     state = fields.Selection([
         ('pending', 'Pending'),
         ('in_progress', 'In Progress'),
         ('passed', 'Passed'),
         ('failed', 'Failed')
-    ], string='Status', default='pending', tracking=True)
+    ], string='Status', default='pending', tracking=True, group_expand='_read_group_state')
     
     result = fields.Selection([
         ('PASS', 'PASS'),

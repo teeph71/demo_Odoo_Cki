@@ -14,33 +14,27 @@ class BikeAssemblyOrder(models.Model):
     customer_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Bike', readonly=True)
     serial_id = fields.Many2one('stock.lot', string='Frame Serial', readonly=True)
-    technician_id = fields.Many2one('res.users', string='Technician', tracking=True, domain=lambda self: self._get_technician_domain())
+    technician_id = fields.Many2one('res.users', string='Technician', tracking=True)
     checklist_template_id = fields.Many2one('bike.assembly.template', string='Template', readonly=True)
-
+    
     start_time = fields.Datetime(string='Start Time', readonly=True)
     finish_time = fields.Datetime(string='Finish Time', readonly=True)
     
+    @api.model
+    def _read_group_state(self, *args, **kwargs):
+        return ['draft', 'assigned', 'in_progress', 'completed', 'rework']
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('assigned', 'Assigned'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
         ('rework', 'Rework')
-    ], string='Status', default='draft', tracking=True)
+    ], string='Status', default='draft', tracking=True, group_expand='_read_group_state')
     
     checklist_line_ids = fields.One2many('bike.assembly.checklist.line', 'order_id', string='Checklist')
     notes = fields.Text(string='Notes')
 
-    @api.model
-    def _get_technician_domain(self):
-        warehouse_employees = self.env['hr.employee'].search([
-            ('department_id.name', '=', 'Phòng ban Kho')
-        ])
-        
-        user_ids = warehouse_employees.mapped('user_id').ids
-        
-        return [('id', 'in', user_ids)]
-    
     @api.onchange('checklist_template_id')
     def _onchange_checklist_template_id(self):
         if self.checklist_template_id:
