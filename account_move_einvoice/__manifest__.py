@@ -3,11 +3,11 @@
     'version': '1.0',
     'category': 'Accounting',
     'summary': 'Tích hợp nút phát hành Hóa đơn điện tử mô phỏng',
-    'depends': ['account'], # Kế thừa từ module Kế toán (Invoicing)
+    'depends': ['account'],
     'data': [
-        'security/einvoice_security.xml'
-        'views/account_move_view.xml',
+        'security/einvoice_security.xml',
+        'views/account_move_invoice_view.xml'
     ],
     'installable': True,
-    'application': False,
+    'application': True,
 }

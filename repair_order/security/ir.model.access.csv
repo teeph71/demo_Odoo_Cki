@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bike_repair_order,bike.repair.order,model_bike_repair_order,,1,1,1,1
+access_bike_repair_service_package,bike.repair.service.package,model_bike_repair_service_package,,1,1,1,1
+access_bike_repair_checklist_template,bike.repair.checklist.template,model_bike_repair_checklist_template,,1,1,1,1
+access_bike_repair_checklist_line,bike.repair.checklist.line,model_bike_repair_checklist_line,,1,1,1,1

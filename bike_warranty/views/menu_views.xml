@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_bike_warranty_root" name="Warranty" sequence="50"
+            web_icon="bike_warranty,static/description/icon.png"/>
+
+        <menuitem id="menu_bike_warranty_warranty" name="Warranty Cards"
+            parent="menu_bike_warranty_root" sequence="10"/>
+
+        <menuitem id="menu_bike_warranty_all" name="All Warranties"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty" sequence="10"/>
+
+        <menuitem id="menu_bike_warranty_active" name="Active"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty_active" sequence="20"/>
+
+        <menuitem id="menu_bike_warranty_expiring" name="Expiring Soon (30 Days)"
+            parent="menu_bike_warranty_warranty"
+            action="action_bike_warranty_expiring_soon" sequence="30"/>
+
+    </data>
+</odoo>

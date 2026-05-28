@@ -1,0 +1,27 @@
+{
+    'name': 'Warranty Management',
+    'version': '1.0',
+    'summary': 'Automatically create warranty cards from Sales Orders by product category',
+    'description': 'Module for managing bike warranty cards for customers.',
+    'category': 'Sales',
+    'author': 'Nhóm Dự Án ERP',
+    'depends': [
+        'sale',
+        'product',
+        'product_warranty',
+        'base_setup',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/ir_sequence.xml',
+        'views/res_config_settings_view.xml',
+        'views/bike_warranty_views.xml',
+        'views/sale_order_views.xml',
+        'views/menu_views.xml',
+        'report/warranty_report.xml',
+        'report/warranty_report_template.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

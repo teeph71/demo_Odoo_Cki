@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_warranty" model="ir.ui.view">
+            <field name="name">res.config.settings.view.warranty</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form" position="inside">
+                    <app string="Warranty"
+                         name="bike_warranty"
+                         data-string="Warranty"
+                         logo="/bike_warranty/static/description/icon.png">
+
+                        <block title="Warranty Card Configuration"
+                               name="warranty_config_block">
+
+                            <setting id="warranty_categories_setting"
+                                     string="Product categories requiring warranty cards"
+                                     help="Select product categories that will automatically generate warranty cards when a sales order is confirmed. E.g.: Bicycles, Electric scooters. Accessories (helmets, water bottles, etc.) do not need to be selected.">
+                                <field
+                                    name="warranty_category_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Chọn loại sản phẩm..."
+                                    options="{'no_create': True}"
+                                    nolabel="1"
+                                />
+                            </setting>
+
+                        </block>
+                    </app>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

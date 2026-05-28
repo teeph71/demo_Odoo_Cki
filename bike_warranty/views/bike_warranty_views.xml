@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══════════════════════════════════════════════════════
+             ACTIONS
+        ═══════════════════════════════════════════════════════ -->
+        <record id="action_bike_warranty" model="ir.actions.act_window">
+            <field name="name">Warranty Cards</field>
+            <field name="res_model">bike.warranty</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Chưa có phiếu bảo hành nào!
+                </p>
+                <p>Phiếu bảo hành sẽ tự động tạo khi xác nhận đơn hàng.</p>
+            </field>
+        </record>
+
+        <record id="action_bike_warranty_active" model="ir.actions.act_window">
+            <field name="name">Active Warranties</field>
+            <field name="res_model">bike.warranty</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('state', '=', 'active')]</field>
+        </record>
+
+        <record id="action_bike_warranty_expiring_soon" model="ir.actions.act_window">
+            <field name="name">Expiring Soon (30 Days)</field>
+            <field name="res_model">bike.warranty</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[
+                ('state', '=', 'active'),
+                ('end_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')),
+                ('end_date', '&gt;=', context_today().strftime('%Y-%m-%d'))
+            ]</field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════════════════
+             LIST VIEW
+        ═══════════════════════════════════════════════════════ -->
+        <record id="view_bike_warranty_list" model="ir.ui.view">
+            <field name="name">bike.warranty.list</field>
+            <field name="model">bike.warranty</field>
+            <field name="arch" type="xml">
+                <list
+                    string="Warranty Cards"
+                    decoration-success="state == 'active'"
+                    decoration-warning="state == 'draft'"
+                    decoration-danger="state == 'expired'"
+                    decoration-muted="state == 'cancelled'"
+                >
+                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="partner_name"/>
+                    <field name="partner_phone"/>
+                    <field name="product_id"/>
+                    <field name="product_category_id"/>
+                    <field name="warranty_duration"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="state"
+                        widget="badge"
+                        decoration-success="state == 'active'"
+                        decoration-warning="state == 'draft'"
+                        decoration-danger="state == 'expired'"
+                        decoration-muted="state == 'cancelled'"
+                    />
+                </list>
+            </field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════════════════
+             FORM VIEW
+        ═══════════════════════════════════════════════════════ -->
+        <record id="view_bike_warranty_form" model="ir.ui.view">
+            <field name="name">bike.warranty.form</field>
+            <field name="model">bike.warranty</field>
+            <field name="arch" type="xml">
+                <form string="Phiếu Bảo Hành">
+                    <header>
+                        <button
+                            name="action_activate"
+                            string="Activate"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                        />
+                        <button
+                            name="action_cancel"
+                            string="Cancel Warranty"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state not in ['draft', 'active']"
+                            confirm="Bạn có chắc muốn hủy phiếu bảo hành này không?"
+                        />
+                        <button
+                            name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            invisible="state != 'cancelled'"
+                        />
+                        <button
+                            name="action_print_warranty"
+                            string="🖨️ Print Warranty"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"
+                        />
+                        <field
+                            name="state"
+                            widget="statusbar"
+                            statusbar_visible="draft,active,expired"
+                        />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <group string="Warranty Information">
+                                <field name="sale_order_id"/>
+                                <field name="sale_order_line_id"
+                                    invisible="not sale_order_id"
+                                />
+                                <field name="start_date" required="1"/>
+                                <field name="end_date" readonly="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group string="Product Information">
+                                <field name="product_id" required="1"/>
+                                <field name="product_category_id" readonly="1"/>
+                                <field name="warranty_duration" required="1"/>
+                            </group>
+                        </group>
+                        <group string="Customer Information">
+                            <group>
+                                <field name="partner_id" required="1"/>
+                                <field name="partner_name"/>
+                                <field name="partner_phone"/>
+                            </group>
+                            <group>
+                                <field name="partner_street"/>
+                                <field name="partner_city"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field
+                                    name="note"
+                                    placeholder="Nhập ghi chú hoặc điều kiện bảo hành..."
+                                    nolabel="1"
+                                />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SEARCH VIEW
+        ═══════════════════════════════════════════════════════ -->
+        <record id="view_bike_warranty_search" model="ir.ui.view">
+            <field name="name">bike.warranty.search</field>
+            <field name="model">bike.warranty</field>
+            <field name="arch" type="xml">
+                <search string="Search Warranty Cards">
+                    <field name="name" string="Warranty Code"/>
+                    <field name="partner_name" string="Customer Name"/>
+                    <field name="partner_phone" string="Phone"/>
+                    <field name="product_id" string="Product"/>
+                    <field name="sale_order_id" string="Sales Order"/>
+                    <separator/>
+                    <filter name="filter_active" string="Active"
+                        domain="[('state', '=', 'active')]"/>
+                    <filter name="filter_expired" string="Expired"
+                        domain="[('state', '=', 'expired')]"/>
+                    <filter name="filter_draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                    <separator/>
+                    <group>
+                        <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                        <filter name="group_category" string="Product Category"
+                            context="{'group_by': 'product_category_id'}"/>
+                        <filter name="group_start_month" string="Warranty Start Month"
+                            context="{'group_by': 'start_date:month'}"/>
+                        <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>
