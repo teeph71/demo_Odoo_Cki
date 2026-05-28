@@ -17,3 +17,4 @@ class AssemblyTemplateLine(models.Model):
     template_id = fields.Many2one('bike.assembly.template', string='Template', required=True, ondelete='cascade')
     name = fields.Char(string='Task Name', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
+    note = fields.Text(string='Note')

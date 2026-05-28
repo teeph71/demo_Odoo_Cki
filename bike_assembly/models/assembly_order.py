@@ -40,6 +40,7 @@ class BikeAssemblyOrder(models.Model):
             for t_line in self.checklist_template_id.line_ids:
                 lines.append((0, 0, {
                     'task_name': t_line.name,
+                    'notes': t_line.note,
                 }))
             self.checklist_line_ids = lines
 

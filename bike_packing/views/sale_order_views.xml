@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_bike_packing" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.bike.packing</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="packing_status" widget="badge" 
+                       decoration-info="packing_status == 'pending'"
+                       decoration-warning="packing_status in ('packing', 'waiting_item')"
+                       decoration-success="packing_status == 'packed'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_inherit_bike_packing" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.bike.packing</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="packing_status" widget="badge" optional="show"
+                       decoration-info="packing_status == 'pending'"
+                       decoration-warning="packing_status in ('packing', 'waiting_item')"
+                       decoration-success="packing_status == 'packed'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_bike_packing" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.bike.packing.sales</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="packing_status" widget="badge" optional="show"
+                       decoration-info="packing_status == 'pending'"
+                       decoration-warning="packing_status in ('packing', 'waiting_item')"
+                       decoration-success="packing_status == 'packed'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
