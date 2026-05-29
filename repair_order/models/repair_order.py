@@ -17,9 +17,6 @@ class BikeRepairOrder(models.Model):
     ], default='draft', tracking=True)
 
     customer_id = fields.Many2one('res.partner', string='Customer', required=True)
-    
-    x_is_member_display = fields.Boolean(related='customer_id.x_is_member', string="Is Member", readonly=True)
-    x_member_tier_id_display = fields.Many2one(related='customer_id.x_member_tier_id', string="Customer Tier", readonly=True)
 
     bicycle_name = fields.Char(string='Bicycle', required=True)
     serial_number = fields.Char(string='Serial Number')
@@ -31,6 +28,7 @@ class BikeRepairOrder(models.Model):
     
     assigned_at = fields.Datetime(string='Assigned At', readonly=True)
     assigned_by = fields.Many2one('res.users', string='Assigned By', readonly=True)
+    done_at = fields.Datetime(string='Done At', readonly=True)
     
     service_package_id = fields.Many2one('bike.repair.service.package', string='Service Package', required=True)
     warranty_card_id = fields.Many2one('bike.warranty', string='Warranty Card')
@@ -42,7 +40,12 @@ class BikeRepairOrder(models.Model):
 
     labor_cost = fields.Float(string='Labor Cost', compute='_compute_labor_cost', store=True, readonly=False)
     package_price = fields.Float(related='service_package_id.price', string='Package Price', store=True)
-    parts_cost = fields.Float(string='Parts Cost', default=0.0)
+    parts_line_ids = fields.One2many(
+        'bike.repair.order.part',
+        'order_id',
+        string='Part Lines',
+    )
+    parts_cost = fields.Float(string='Parts Cost', compute='_compute_parts_cost', store=True)
     
     membership_discount = fields.Float(string='Membership Discount', compute='_compute_membership_discount')
     warranty_discount = fields.Float(string='Warranty Discount', compute='_compute_warranty_discount', store=True)
@@ -57,6 +60,11 @@ class BikeRepairOrder(models.Model):
     def _compute_labor_cost(self):
         for rec in self:
             rec.labor_cost = rec.service_package_id.price or 0.0
+
+    @api.depends('parts_line_ids.line_cost')
+    def _compute_parts_cost(self):
+        for rec in self:
+            rec.parts_cost = sum(rec.parts_line_ids.mapped('line_cost'))
 
     @api.depends('labor_cost', 'customer_id.x_is_member', 'customer_id.x_member_tier_id.discount_rate')
     def _compute_membership_discount(self):
@@ -106,18 +114,32 @@ class BikeRepairOrder(models.Model):
                 # Nếu bảo hành 100% thì đơn giá nhân công = 0
                 so_labor_price = max(0.0, rec.labor_cost - rec.warranty_discount)
 
+                order_lines = [(0, 0, {
+                    'product_id': rec.service_package_id.product_id.id,
+                    'name': f"[BẢO HÀNH] {rec.service_package_id.name}" if rec.warranty_card_id else rec.service_package_id.name,
+                    'product_uom_qty': 1.0,
+                    'price_unit': so_labor_price,
+                })]
+                
                 so = self.env['sale.order'].create({
                     'partner_id': rec.customer_id.id,
                     'repair_order_id': rec.id,
-                    'order_line': [(0, 0, {
-                        'product_id': rec.service_package_id.product_id.id,
-                        'name': f"[BẢO HÀNH] {rec.service_package_id.name}" if rec.warranty_card_id else rec.service_package_id.name,
-                        'product_uom_qty': 1.0,
-                        'price_unit': so_labor_price,
-                    })],
+                    'order_line': order_lines,
                 })
                 rec.sale_order_id = so
+
+                for part in rec.parts_line_ids:
+                    sale_line = self.env['sale.order.line'].create({
+                        'order_id': so.id,
+                        'product_id': part.product_id.id,
+                        'product_uom_qty': part.quantity,
+                        'price_unit': part.unit_cost,
+                        'name': part.product_id.name,
+                    })
+                    part.with_context(skip_so_sync=True).write({'sale_line_id': sale_line.id})
+                    
             rec.state = 'confirmed'
+
 
     def action_start_repair(self):
         for rec in self:
@@ -139,6 +161,7 @@ class BikeRepairOrder(models.Model):
                     tier = getattr(rec.customer_id, 'x_member_tier_id', None)
                     if tier and tier.free_maintenance_sessions > 0:
                         tier.write({'free_maintenance_sessions': tier.free_maintenance_sessions - 1})
+            rec.done_at = fields.Datetime.now()
             rec.state = 'done'
 
     def action_cancel(self):
