@@ -149,6 +149,3 @@ bike_warranty/
 product_warranty/
 repair_order/
 ```
-
-```
-```
