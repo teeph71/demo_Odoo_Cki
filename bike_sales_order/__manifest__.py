@@ -16,9 +16,7 @@
         'sale_stock',
     ],
     'data': [
-        'security/security_rules.xml',
         'security/ir.model.access.csv',
-        'views/sale_order_views.xml',
     ],
     'demo': [
     ],
