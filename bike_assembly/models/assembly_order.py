@@ -6,7 +6,6 @@ class BikeAssemblyOrder(models.Model):
     _name = 'bike.assembly.order'
     _description = 'Bike Assembly Order'
     _order = 'create_date desc'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Reference', required=True, copy=False, readonly=True, default='New')
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True)
@@ -14,7 +13,7 @@ class BikeAssemblyOrder(models.Model):
     customer_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Bike', readonly=True)
     serial_id = fields.Many2one('stock.lot', string='Frame Serial', readonly=True)
-    technician_id = fields.Many2one('res.users', string='Technician', tracking=True)
+    technician_id = fields.Many2one('res.users', string='Technician')
     checklist_template_id = fields.Many2one('bike.assembly.template', string='Template', readonly=True)
     
     start_time = fields.Datetime(string='Start Time', readonly=True)
@@ -30,7 +29,7 @@ class BikeAssemblyOrder(models.Model):
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
         ('rework', 'Rework')
-    ], string='Status', default='draft', tracking=True, group_expand='_read_group_state')
+    ], string='Status', default='draft', group_expand='_read_group_state')
     
     checklist_line_ids = fields.One2many('bike.assembly.checklist.line', 'order_id', string='Checklist')
     notes = fields.Text(string='Notes')

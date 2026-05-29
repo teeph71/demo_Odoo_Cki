@@ -6,7 +6,6 @@ class BikePdiOrder(models.Model):
     _name = 'bike.pdi.order'
     _description = 'Bike PDI Order'
     _order = 'create_date desc'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='PDI Reference', required=True, copy=False, readonly=True, default='New')
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True)
@@ -14,7 +13,7 @@ class BikePdiOrder(models.Model):
     customer_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Bike', readonly=True)
     serial_id = fields.Many2one('stock.lot', string='Frame Serial', readonly=True)
-    technician_id = fields.Many2one('res.users', string='Technician', tracking=True)
+    technician_id = fields.Many2one('res.users', string='Technician')
     
     @api.model
     def _read_group_state(self, *args, **kwargs):
@@ -25,12 +24,12 @@ class BikePdiOrder(models.Model):
         ('in_progress', 'In Progress'),
         ('passed', 'Passed'),
         ('failed', 'Failed')
-    ], string='Status', default='pending', tracking=True, group_expand='_read_group_state')
+    ], string='Status', default='pending', group_expand='_read_group_state')
     
     result = fields.Selection([
         ('PASS', 'PASS'),
         ('FAIL', 'FAIL')
-    ], string='PDI Result', readonly=True, tracking=True)
+    ], string='PDI Result', readonly=True)
     
     start_time = fields.Datetime(string='Start Time', readonly=True)
     finish_time = fields.Datetime(string='Finish Time', readonly=True)
