@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu for PDI -->
+    <menuitem id="menu_bike_pdi_root" name="Bike PDI" web_icon="bike_pdi,static/description/icon.png" sequence="45"/>
+    <menuitem id="menu_bike_pdi_config" name="Configuration" parent="menu_bike_pdi_root" sequence="100"/>
+</odoo>

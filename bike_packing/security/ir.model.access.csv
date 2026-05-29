@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bike_packing_order_staff,bike.packing.order.staff,model_bike_packing_order,group_bike_packing_staff,1,1,1,0
+access_bike_packing_checklist_line_staff,bike.packing.checklist.line.staff,model_bike_packing_checklist_line,group_bike_packing_staff,1,1,1,0
+access_bike_packing_order_user,bike.packing.order.user,model_bike_packing_order,base.group_user,1,0,0,0
+access_bike_packing_checklist_line_user,bike.packing.checklist.line.user,model_bike_packing_checklist_line,base.group_user,1,0,0,0

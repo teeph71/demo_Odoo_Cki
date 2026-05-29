@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_bike_pdi_order" model="ir.sequence">
+        <field name="name">Bike PDI Order</field>
+        <field name="code">bike.pdi.order</field>
+        <field name="prefix">PDI</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

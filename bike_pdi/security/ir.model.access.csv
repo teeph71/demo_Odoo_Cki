@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bike_pdi_template,bike.pdi.template,model_bike_pdi_template,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_pdi_template_read,bike.pdi.template,model_bike_pdi_template,bike_assembly.group_workshop_technician,1,0,0,0
+access_bike_pdi_template_line,bike.pdi.template_line,model_bike_pdi_template_line,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_pdi_template_line_read,bike.pdi.template_line,model_bike_pdi_template_line,bike_assembly.group_workshop_technician,1,0,0,0
+access_bike_pdi_order,bike.pdi.order,model_bike_pdi_order,bike_assembly.group_workshop_technician,1,1,0,0
+access_bike_pdi_order_manager,bike.pdi.order,model_bike_pdi_order,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_pdi_checklist_line,bike.pdi.checklist_line,model_bike_pdi_checklist_line,bike_assembly.group_workshop_technician,1,1,0,0
+access_bike_pdi_checklist_line_manager,bike.pdi.checklist_line,model_bike_pdi_checklist_line,bike_assembly.group_workshop_manager,1,1,1,1

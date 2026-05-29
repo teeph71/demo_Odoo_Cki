@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pdi_template_form" model="ir.ui.view">
+        <field name="name">bike.pdi.template.form</field>
+        <field name="model">bike.pdi.template</field>
+        <field name="arch" type="xml">
+            <form string="PDI Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Road Bike PDI Checklist"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="category_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Checklist Items">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pdi_template_list" model="ir.ui.view">
+        <field name="name">bike.pdi.template.list</field>
+        <field name="model">bike.pdi.template</field>
+        <field name="arch" type="xml">
+            <list string="PDI Templates">
+                <field name="name"/>
+                <field name="category_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pdi_template" model="ir.actions.act_window">
+        <field name="name">PDI Templates</field>
+        <field name="res_model">bike.pdi.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_bike_pdi_template" name="PDI Templates" parent="menu_bike_pdi_config" action="action_pdi_template" sequence="10"/>
+</odoo>
