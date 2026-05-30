@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_lost_reason,sale.lost.reason,model_sale_lost_reason,,1,1,1,1
-access_quotation_lost_wizard,quotation.lost.wizard,model_quotation_lost_wizard,,1,1,1,1
+access_sale_lost_reason_user,sale.lost.reason.user,model_sale_lost_reason,sales_team.group_sale_salesman,1,0,0,0
+access_sale_lost_reason_manager,sale.lost.reason.manager,model_sale_lost_reason,sales_team.group_sale_manager,1,1,1,1
+access_quotation_lost_wizard,quotation.lost.wizard,model_quotation_lost_wizard,sales_team.group_sale_salesman,1,1,1,0

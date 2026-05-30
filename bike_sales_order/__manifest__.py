@@ -1,6 +1,6 @@
 
 {
-    'name': 'Custom CK Han',
+    'name': 'Sales Order Extension',
     'version': '19.0.1.0.0',
     'category': 'Sales/Sales',
     'summary': 'Kế thừa quy trình Sales Order',

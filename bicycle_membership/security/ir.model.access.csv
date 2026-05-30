@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_bicycle_member_tier,bicycle.member.tier,model_bicycle_member_tier,base.group_user,1,1,1,1
+access_bicycle_member_tier_sales,bicycle.member.tier.sales,model_bicycle_member_tier,sales_team.group_sale_salesman,1,1,1,0
+access_bicycle_member_tier_stock,bicycle.member.tier.stock,model_bicycle_member_tier,bike_assembly.group_workshop_technician,1,0,0,0
+access_bicycle_member_tier_account,bicycle.member.tier.account,model_bicycle_member_tier,account.group_account_invoice,1,0,0,0
+access_bicycle_member_tier_manager,bicycle.member.tier.manager,model_bicycle_member_tier,sales_team.group_sale_manager,1,1,1,1

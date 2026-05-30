@@ -12,6 +12,7 @@
         'hr',
         'bike_warranty',
         'bicycle_membership',
+        'bike_assembly',
     ],
     'data': [
     'security/ir.model.access.csv',

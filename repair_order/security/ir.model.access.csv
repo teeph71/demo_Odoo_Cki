@@ -1,6 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_bike_repair_order,bike.repair.order,model_bike_repair_order,,1,1,1,1
-access_bike_repair_service_package,bike.repair.service.package,model_bike_repair_service_package,,1,1,1,1
-access_bike_repair_checklist_template,bike.repair.checklist.template,model_bike_repair_checklist_template,,1,1,1,1
-access_bike_repair_checklist_line,bike.repair.checklist.line,model_bike_repair_checklist_line,,1,1,1,1
-access_bike_repair_order_part,bike.repair.order.part,model_bike_repair_order_part,base.group_user,1,1,1,1
+access_bike_repair_order,bike.repair.order,model_bike_repair_order,bike_assembly.group_workshop_technician,1,1,1,0
+access_bike_repair_order_mgr,bike.repair.order.mgr,model_bike_repair_order,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_repair_order_part,bike.repair.order.part,model_bike_repair_order_part,bike_assembly.group_workshop_technician,1,1,1,1
+access_bike_repair_order_part_mgr,bike.repair.order.part.mgr,model_bike_repair_order_part,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_repair_checklist_line,bike.repair.checklist.line,model_bike_repair_checklist_line,bike_assembly.group_workshop_technician,1,1,1,1
+access_bike_repair_checklist_line_mgr,bike.repair.checklist.line.mgr,model_bike_repair_checklist_line,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_repair_service_package,bike.repair.service.package,model_bike_repair_service_package,bike_assembly.group_workshop_technician,1,0,0,0
+access_bike_repair_service_package_mgr,bike.repair.service.package.mgr,model_bike_repair_service_package,bike_assembly.group_workshop_manager,1,1,1,1
+access_bike_repair_checklist_template,bike.repair.checklist.template,model_bike_repair_checklist_template,bike_assembly.group_workshop_technician,1,0,0,0
+access_bike_repair_checklist_template_mgr,bike.repair.checklist.template.mgr,model_bike_repair_checklist_template,bike_assembly.group_workshop_manager,1,1,1,1
