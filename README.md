@@ -79,3 +79,4 @@ Bộ module Odoo tùy chỉnh dành cho quy trình bán hàng và dịch vụ xe
 8. `bike_warranty`
 9. `repair_order`
 10. `account_move_einvoice`
+11. `bike_sales_order`
