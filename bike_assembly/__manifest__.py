@@ -11,7 +11,7 @@
         - Quản lý trạng thái Assembly và Rework.
     """,
     'author': 'Odoo Consultant',
-    'depends': ['base', 'stock', 'sale_management', 'bike_picking'],
+    'depends': ['base', 'stock', 'sale_management', 'bike_picking', 'mail'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',

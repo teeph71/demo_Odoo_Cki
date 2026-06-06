@@ -5,6 +5,7 @@ from datetime import datetime
 class BikeAssemblyOrder(models.Model):
     _name = 'bike.assembly.order'
     _description = 'Bike Assembly Order'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
     name = fields.Char(string='Reference', required=True, copy=False, readonly=True, default='New')
@@ -52,6 +53,19 @@ class BikeAssemblyOrder(models.Model):
         for vals in vals_list:
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code('bike.assembly.order') or 'New'
+                
+            # Tự động sinh checklist từ Template nếu tạo bằng code/API
+            if vals.get('checklist_template_id') and not vals.get('checklist_line_ids'):
+                template = self.env['bike.assembly.template'].browse(vals['checklist_template_id'])
+                if template:
+                    lines = []
+                    for t_line in template.line_ids:
+                        lines.append((0, 0, {
+                            'task_name': t_line.name,
+                            'notes': t_line.note,
+                        }))
+                    vals['checklist_line_ids'] = lines
+                    
         return super().create(vals_list)
 
     def action_assign(self):
@@ -97,7 +111,17 @@ class BikeAssemblyChecklistLine(models.Model):
     def _onchange_completed(self):
         if self.completed:
             self.completed_by = self.env.user
-            self.completed_at = datetime.now()
+            self.completed_at = fields.Datetime.now()
         else:
             self.completed_by = False
             self.completed_at = False
+
+    def write(self, vals):
+        if 'completed' in vals:
+            if vals['completed']:
+                vals['completed_by'] = self.env.user.id
+                vals['completed_at'] = fields.Datetime.now()
+            else:
+                vals['completed_by'] = False
+                vals['completed_at'] = False
+        return super().write(vals)

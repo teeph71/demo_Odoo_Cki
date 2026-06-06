@@ -32,26 +32,8 @@ class BikePackingOrder(models.Model):
     def _check_picking_pdi_assembly(self):
         for order in self:
             if order.picking_id:
-                # Check if it's a bike order
-                is_bike_order = any(move.product_id.is_bike for move in order.picking_id.move_ids)
-                if not is_bike_order:
-                    continue
-
-                # Check PDI
-                pdi_orders = self.env['bike.pdi.order'].search([('picking_id', '=', order.picking_id.id)])
-                if not pdi_orders:
-                    raise UserError("Cannot map to this Picking. It is a bike order but has no PDI records.")
-                if any(p.state != 'passed' for p in pdi_orders):
-                    raise UserError("Cannot map to this Picking. Not all PDI records have passed.")
-                
-                # Check Assembly
-                requires_assembly = any(move.product_id.is_bike and move.product_id.is_assembly_required for move in order.picking_id.move_ids)
-                if requires_assembly:
-                    assembly_orders = self.env['bike.assembly.order'].search([('picking_id', '=', order.picking_id.id)])
-                    if not assembly_orders:
-                        raise UserError("Cannot map to this Picking. It requires assembly but has no assembly records.")
-                    if any(a.state != 'completed' for a in assembly_orders):
-                        raise UserError("Cannot map to this Picking. Not all assembly records are completed.")
+                # Gọi hàm helper dùng chung từ stock.picking
+                order.picking_id._check_bike_pdi_assembly_status()
 
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
@@ -122,23 +104,8 @@ class BikePackingOrder(models.Model):
             
             # Re-check PDI and Assembly
             if order.picking_id:
-                is_bike_order = any(move.product_id.is_bike for move in order.picking_id.move_ids)
-                if is_bike_order:
-                    # Check PDI
-                    pdi_orders = self.env['bike.pdi.order'].search([('picking_id', '=', order.picking_id.id)])
-                    if not pdi_orders:
-                        raise UserError("Cannot complete packing. It is a bike order but has no PDI records.")
-                    if any(p.state != 'passed' for p in pdi_orders):
-                        raise UserError("Cannot complete packing. Not all PDI records have passed.")
-                    
-                    # Check Assembly
-                    requires_assembly = any(move.product_id.is_bike and move.product_id.is_assembly_required for move in order.picking_id.move_ids)
-                    if requires_assembly:
-                        assembly_orders = self.env['bike.assembly.order'].search([('picking_id', '=', order.picking_id.id)])
-                        if not assembly_orders:
-                            raise UserError("Cannot complete packing. It requires assembly but has no assembly records.")
-                        if any(a.state != 'completed' for a in assembly_orders):
-                            raise UserError("Cannot complete packing. Not all assembly records are completed.")
+                # Gọi hàm helper dùng chung từ stock.picking
+                order.picking_id._check_bike_pdi_assembly_status()
             
             unchecked_lines = order.checklist_line_ids.filtered(lambda l: not l.checked)
             if unchecked_lines:

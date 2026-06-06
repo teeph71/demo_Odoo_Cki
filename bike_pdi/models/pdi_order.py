@@ -43,6 +43,17 @@ class BikePdiOrder(models.Model):
         for vals in vals_list:
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code('bike.pdi.order') or 'New'
+            
+            if vals.get('checklist_template_id') and not vals.get('checklist_line_ids'):
+                template = self.env['bike.pdi.template'].browse(vals['checklist_template_id'])
+                if template:
+                    lines = []
+                    for t_line in template.line_ids:
+                        lines.append((0, 0, {
+                            'item_name': t_line.name,
+                        }))
+                    vals['checklist_line_ids'] = lines
+
         return super().create(vals_list)
 
     def action_start_inspection(self):

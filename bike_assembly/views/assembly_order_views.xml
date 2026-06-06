@@ -38,9 +38,9 @@
                     </group>
                     <notebook>
                         <page string="Checklist">
-                            <field name="checklist_line_ids">
+                            <field name="checklist_line_ids" readonly="state != 'in_progress'">
                                 <list editable="bottom" create="false" delete="false">
-                                    <field name="completed" widget="boolean_toggle"/>
+                                    <field name="completed" widget="boolean_toggle" readonly="parent.state != 'in_progress'"/>
                                     <field name="task_name" readonly="1"/>
                                     <field name="notes"/>
                                     <field name="completed_by" readonly="1" force_save="1"/>

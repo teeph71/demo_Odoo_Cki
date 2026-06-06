@@ -6,16 +6,16 @@ class BikeAssemblyOrder(models.Model):
     def action_complete_assembly(self):
         res = super().action_complete_assembly()
         
+        Template = self.env['bike.pdi.template']
+        template_cache = {}
+        
         for order in self:
-            Template = self.env['bike.pdi.template']
-            template = Template.search([('category_id', 'parent_of', order.product_id.categ_id.id)], limit=1)
+            categ_id = order.product_id.categ_id.id
+            if categ_id not in template_cache:
+                template = Template.search([('category_id', 'parent_of', categ_id)], limit=1, order='id desc')
+                template_cache[categ_id] = template.id if template else False
             
-            checklist_vals = []
-            if template:
-                for t_line in template.line_ids:
-                    checklist_vals.append((0, 0, {
-                        'item_name': t_line.name,
-                    }))
+            template_id = template_cache[categ_id]
                     
             self.env['bike.pdi.order'].create({
                 'picking_id': order.picking_id.id,
@@ -23,8 +23,7 @@ class BikeAssemblyOrder(models.Model):
                 'customer_id': order.customer_id.id,
                 'product_id': order.product_id.id,
                 'serial_id': order.serial_id.id,
-                'checklist_template_id': template.id if template else False,
-                'checklist_line_ids': checklist_vals,
+                'checklist_template_id': template_id,
             })
             
         return res

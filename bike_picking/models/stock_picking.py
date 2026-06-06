@@ -1,7 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 
-
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
@@ -17,46 +16,49 @@ class StockPicking(models.Model):
     is_bike_order = fields.Boolean(
         string='Is Bike Order',
         compute='_compute_is_bike_order',
+        store=True,
     )
 
     @api.depends('move_ids.product_id.is_bike')
     def _compute_is_bike_order(self):
         for picking in self:
-            is_bike = False
-            for move in picking.move_ids:
-                if move.product_id.is_bike:
-                    is_bike = True
-                    break
-            picking.is_bike_order = is_bike
+            picking.is_bike_order = any(move.product_id.is_bike for move in picking.move_ids)
 
     def action_start_picking(self):
         for picking in self:
             if picking.picking_status == 'waiting_pick':
                 picking.picking_status = 'picking'
 
-    def action_complete_picking(self):
+    def button_validate(self):
+        # 1. Custom validation trước khi chạy hàm chuẩn của Odoo
         for picking in self:
             if picking.picking_status == 'picking':
-                # Validations for Bikes
-                requires_assembly = False
                 for move in picking.move_ids:
                     if move.product_id.is_bike:
-                        # Check serial assignment on move lines
+                        # Điểm 4: Dùng move.quantity (số lượng thực tế nhặt/done trong odoo mới) 
+                        # thay vì move.product_uom_qty (số lượng yêu cầu) để hỗ trợ Backorder
                         total_qty_assigned = sum(
                             line.quantity for line in move.move_line_ids
                             if line.lot_id or line.lot_name
                         )
-                        if total_qty_assigned < move.product_uom_qty:
+                        if total_qty_assigned < move.quantity:
                             raise UserError(
-                                f"Serial number is required for all "
+                                f"Serial number is required for "
                                 f"{move.product_id.display_name} "
                                 f"before completing picking."
                             )
 
-                        if move.product_id.is_assembly_required:
-                            requires_assembly = True
+        # 2. Gọi hàm gốc để Odoo xử lý việc xuất kho (đổi state sang 'done', tạo backorder...)
+        res = super().button_validate()
 
-                # Route picking
+        # 3. Điều hướng (Routing) sau khi phiếu kho đã Validate thành công
+        # Lưu ý: res trả về có thể là một dict chứa action (ví dụ popup backorder).
+        # Ta chỉ cập nhật picking_status nếu phiếu đã thực sự chuyển sang 'done'
+        for picking in self:
+            if picking.state == 'done':
+                requires_assembly = any(move.product_id.is_assembly_required for move in picking.move_ids if move.product_id.is_bike)
+                
+                # Cập nhật status
                 if picking.is_bike_order:
                     if requires_assembly:
                         picking.picking_status = 'assembly'
@@ -64,12 +66,5 @@ class StockPicking(models.Model):
                         picking.picking_status = 'pdi'
                 else:
                     picking.picking_status = 'picked'
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        pickings = super().create(vals_list)
-        # Ensure new pickings start in waiting_pick if not set
-        for picking in pickings:
-            if not picking.picking_status:
-                picking.picking_status = 'waiting_pick'
-        return pickings
+                    
+        return res
