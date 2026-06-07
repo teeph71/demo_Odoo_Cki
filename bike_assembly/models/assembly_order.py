@@ -90,6 +90,8 @@ class BikeAssemblyOrder(models.Model):
             
         self.finish_time = datetime.now()
         self.state = 'completed'
+        if self.picking_id:
+            self.picking_id.picking_status = 'pdi'
 
     def action_return_rework(self):
         self.ensure_one()

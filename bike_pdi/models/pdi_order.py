@@ -86,6 +86,7 @@ class BikePdiOrder(models.Model):
             })
             if order.picking_id:
                 order.picking_id.message_post(body=f"PDI {order.name} Passed.")
+                order.picking_id.picking_status = 'ready_pickup'
                 
             if order.sales_order_id:
                 order.sales_order_id._compute_pdi_status()

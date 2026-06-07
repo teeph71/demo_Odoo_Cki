@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
         ('pending', 'Pending Packing'),
         ('packing', 'Packing'),
         ('waiting_item', 'Waiting Item'),
-        ('packed', 'Packed'),
+        ('packed', 'Completed'),
     ], string='Packing Status', compute='_compute_packing_status', store=True)
 
     def _compute_packing_status(self):

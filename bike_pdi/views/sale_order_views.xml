@@ -19,35 +19,4 @@
         </field>
     </record>
 
-    <record id="view_quotation_tree_inherit_pdi" model="ir.ui.view">
-        <field name="name">sale.order.list.inherit.pdi</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='state']" position="after">
-                <field name="pdi_status" widget="badge" 
-                       decoration-info="pdi_status == 'pending'"
-                       decoration-primary="pdi_status == 'in_progress'"
-                       decoration-success="pdi_status == 'ready_pickup'"
-                       decoration-danger="pdi_status == 'failed'"
-                       optional="show"/>
-            </xpath>
-        </field>
-    </record>
-    
-    <record id="view_order_tree_inherit_pdi" model="ir.ui.view">
-        <field name="name">sale.order.list.inherit.pdi2</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='state']" position="after">
-                <field name="pdi_status" widget="badge" 
-                       decoration-info="pdi_status == 'pending'"
-                       decoration-primary="pdi_status == 'in_progress'"
-                       decoration-success="pdi_status == 'ready_pickup'"
-                       decoration-danger="pdi_status == 'failed'"
-                       optional="show"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>

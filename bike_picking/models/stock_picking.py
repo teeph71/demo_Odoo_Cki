@@ -24,6 +24,51 @@ class StockPicking(models.Model):
         for picking in self:
             picking.is_bike_order = any(move.product_id.is_bike for move in picking.move_ids)
 
+    is_pick_transfer = fields.Boolean(
+        string='Is Pick Transfer',
+        compute='_compute_is_pick_transfer',
+        store=False,
+    )
+
+    @api.depends('picking_type_id')
+    def _compute_is_pick_transfer(self):
+        for picking in self:
+            if not picking.picking_type_id:
+                picking.is_pick_transfer = False
+                continue
+            
+            type_name = (picking.picking_type_id.name or '').lower()
+            seq_code = (picking.picking_type_id.sequence_code or '').upper()
+            
+            is_pack_or_out = (
+                seq_code in ['PACK', 'OUT'] or 
+                picking.picking_type_id.code == 'outgoing' or
+                any(kw in type_name for kw in ['pack', 'đóng gói', 'dong goi', 'delivery', 'giao hàng', 'giao hang', 'out'])
+            )
+            
+            is_pick = (
+                seq_code == 'PICK' or 
+                any(kw in type_name for kw in ['pick', 'lấy hàng', 'lay hang'])
+            )
+            
+            # Default to showing it if it's explicitly a pick, or if it's not a pack/out
+            if is_pack_or_out and not is_pick:
+                picking.is_pick_transfer = False
+            else:
+                # If we have 1-step delivery, sequence_code is OUT, so it would be hidden by the above logic.
+                # But wait, if they have picking, packing, delivery, they must be using 2-step or 3-step.
+                # So if it's OUT, hide it. If it's PACK, hide it. Otherwise show it.
+                picking.is_pick_transfer = True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            # Xóa giá trị mặc định 'waiting_pick' nếu không phải là phiếu Pick
+            if not record.is_pick_transfer:
+                record.picking_status = False
+        return records
+
     def action_start_picking(self):
         for picking in self:
             if picking.picking_status == 'waiting_pick':
@@ -50,21 +95,23 @@ class StockPicking(models.Model):
 
         # 2. Gọi hàm gốc để Odoo xử lý việc xuất kho (đổi state sang 'done', tạo backorder...)
         res = super().button_validate()
+        return res
 
-        # 3. Điều hướng (Routing) sau khi phiếu kho đã Validate thành công
-        # Lưu ý: res trả về có thể là một dict chứa action (ví dụ popup backorder).
-        # Ta chỉ cập nhật picking_status nếu phiếu đã thực sự chuyển sang 'done'
+    def _action_done(self):
+        res = super()._action_done()
         for picking in self:
-            if picking.state == 'done':
-                requires_assembly = any(move.product_id.is_assembly_required for move in picking.move_ids if move.product_id.is_bike)
+            # Chỉ cập nhật trạng thái cho các phiếu Pick
+            if not picking.is_pick_transfer:
+                continue
                 
-                # Cập nhật status
-                if picking.is_bike_order:
-                    if requires_assembly:
-                        picking.picking_status = 'assembly'
-                    else:
-                        picking.picking_status = 'pdi'
+            requires_assembly = any(move.product_id.is_assembly_required for move in picking.move_ids if move.product_id.is_bike)
+            
+            # Cập nhật status
+            if picking.is_bike_order:
+                if requires_assembly:
+                    picking.picking_status = 'assembly'
                 else:
-                    picking.picking_status = 'picked'
-                    
+                    picking.picking_status = 'pdi'
+            else:
+                picking.picking_status = 'picked'
         return res
